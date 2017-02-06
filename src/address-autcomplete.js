@@ -10,7 +10,6 @@ class AutocompleteGoogle {
         this.service = new google.maps.places.AutocompleteService();
         this.placesService = new google.maps.places.PlacesService(document.createElement('div'));
         this.elements = {};
-        this.googlePath = `https://maps.googleapis.com/maps/api/place/details/json?key=${this.options.googleKey}`;
         this.fields = {
             streetNumber: true,
             streetName: true,
@@ -368,6 +367,7 @@ class AutocompleteGoogle {
                         <span><input type="text" placeholder="Field name" data-autocomplete-input id="autocomplete-google" name="autocomplete-google"/></span>
                          <p class="label-text"></p>
                      </div>
+                     <p><a href="#" data-form-toggle>Can't find address</a></p>
                 </div>
                 <div class="manual-form" data-manual-form>
                     ${streetNumber[this.fields.streetNumber]}
@@ -375,7 +375,7 @@ class AutocompleteGoogle {
                     ${suburb[this.fields.suburb]}
                     ${state[this.fields.state]}
                     ${postcode[this.fields.postcode]}
-                <p><a href="#" data-form-toggle>Can't find address</a></p>
+                </div>
             </div>`;
 
         return parser.parseFromString(string, 'text/html').querySelector('.autocomplete-wrapper');
