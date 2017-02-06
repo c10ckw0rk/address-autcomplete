@@ -11,6 +11,8 @@ const rename = require('gulp-rename');
 const pump = require('pump');
 const Server = require('karma').Server;
 
+const srcFile = 'address-autcomplete';
+
 const createBundle = (pth) => {
     return browserify(pth, {standalone: 'Autocomplete'}).transform('babelify', {presets: ['es2015']});
 };
@@ -65,11 +67,11 @@ const serve = () => {
 };
 
 gulp.task('build', done => {
-    bob(createBundle('./src/autocomplete-js-google.js'), done, './autocomplete-js-google.js', './dist');
+    bob(createBundle(`./src/${srcFile}.js`), done, `./${srcFile}.js`, './dist');
 });
 
 gulp.task('build-test', () => {
-    bob(createBundle('./_test/autocomplete-js-google.test.js'), test, './compiled/autocomplete-js-google.test.js', './_test');
+    bob(createBundle(`./_test/${srcFile}.test.js`), test, `./compiled/${srcFile}.test.js`, './_test');
 });
 
 gulp.task('watch', () => {
@@ -82,9 +84,9 @@ gulp.task('test', done => {
 });
 
 gulp.task('dist', () => {
-    return createBundle('./src/autocomplete-js-google.js').bundle()
+    return createBundle(`./src/${srcFile}.js`).bundle()
         .on('error', err => { console.error(err); this.emit('end'); })
-        .pipe(source('./autocomplete-js-google.js'))
+        .pipe(source(`./${srcFile}.js`))
         .pipe(buffer())
         .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(uglify())
