@@ -26,7 +26,7 @@
     "watchify": "3.9.0"
   },
   "license": "ISC",
-  "main": "dist/TypeAhead-Google.min.js",
+  "main": "dist/address-autcomplete.min.js",
   "name": "address-autcomplete",
   "repository": "https://github.com/c10ckw0rk/address-autcomplete.git",
   "scripts": {
