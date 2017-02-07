@@ -14,7 +14,7 @@ module.exports = function (config) {
         files: [
 
             // helper libraries
-            'http://maps.googleapis.com/maps/api/js?key=AIzaSyCZu84Vw86bpXAXMgD8bBNfJB5IgQOo90k&libraries=places',
+            'http://maps.googleapis.com/maps/api/js?key=AIzaSyA75M7nfhDzGGxfoRddVBgL7RO18TmraZM&libraries=places',
             '_test/compiled/*.test.js'
 
             // {pattern: 'test/mocks/*.js', served: true, included: false, watched: false},

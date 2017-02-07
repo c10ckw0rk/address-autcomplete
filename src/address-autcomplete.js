@@ -258,6 +258,14 @@ class AutocompleteGoogle {
 
     }
 
+    _cleanAutoComplete() {
+        this.result = {};
+        this.isValid = null;
+        this.placeChosen = null;
+        this.elements.autoCompleteInput.value = '';
+        this.elements.autoCompleteInput.setAttribute('value', '');
+    }
+
     _getResult(input, onResult) {
 
         this.service.getPlacePredictions({
@@ -474,9 +482,14 @@ class AutocompleteGoogle {
             this.validate(e.target);
         };
 
+        const emptyResult = () => {
+            this._cleanAutoComplete();
+        };
+
         this.elements.formToggle.addEventListener('click', switchForms);
         this.elements.autoCompleteInput.addEventListener('keyup', resetResult);
         this.elements.autoCompleteInput.addEventListener('keyup', getDropDownResults);
+        this.elements.autoCompleteInput.addEventListener('focus', emptyResult);
 
         this._utils().delegate('[data-autocomplete-wrapper]', 'input, select', 'blur', validate);
         this._utils().delegate('[data-manual-form]', 'input, select', 'keyup', updateManualInput);

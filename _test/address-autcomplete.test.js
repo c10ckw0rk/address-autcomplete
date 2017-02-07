@@ -2,7 +2,7 @@
 /* global it, describe, expect, beforeEach, $, Cookies, FeatureFlagons, beforeAll, afterEach */
 
 import simulant from 'simulant';
-import AutoComplete from '../src/autocomplete-js-google.js';
+import AutoComplete from '../src/address-autcomplete.js';
 
 const openDropDown = () => {
 
