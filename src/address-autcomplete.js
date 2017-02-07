@@ -204,7 +204,7 @@ class AutocompleteGoogle {
 
         const validator = (item) => {
 
-            const valid = !(this.result[item] === null || this.result[item] === '' || this.result[item] === 'null');
+            const valid = !(this.result[item] === null || this.result[item] === '' || this.result[item] === 'null' || this.result[item] === undefined);
             const input = document.querySelector(`[data-google-places-key="${item}"]`);
             clsToggle(input, !valid);
 
@@ -239,6 +239,7 @@ class AutocompleteGoogle {
     }
 
     _cleanForm() {
+
         this.result = {};
         this.isValid = null;
         this.placeChosen = null;
@@ -268,17 +269,67 @@ class AutocompleteGoogle {
 
     _getResult(input, onResult) {
 
-        this.service.getPlacePredictions({
-            input: input,
-            componentRestrictions: {country: 'au'},
-            types: ['address']
-        }, (predictions, status) => {
+        if (location.hostname === 'localhost') {
+            onResult([
+                {
+                    description: '126 Princes Highway, Bolwarra, Victoria, Australia',
+                    id: 'f3ba2d2b971163fc9f3de716d1232f9386d0cc3b',
+                    matched_substrings: [
+                        {
+                            length: 2,
+                            offset: 0
+                        }
+                    ],
+                    place_id: 'ChIJ57-9r9-QnaoRZzzxfcRRHew',
+                    reference: 'ClRKAAAAwIG0qank1q8kRkxGydb4RcCQD6MchOWjOamYLRvNmiQnzFmFMntn_K4iC-hsKmHwl46GcFbs4Ck6Tz8Isd9VDg0TvX7Kxf9B1NTPvR2RwiISEEElzX-M03xToF38WrGve2YaFMXoC_U3_maC12ElKtzTSD_TqbA8',
+                    structured_formatting: {
+                        main_text: '126 Princes Highway',
+                        main_text_matched_substrings: [
+                            {
+                                length: 2,
+                                offset: 0
+                            }
+                        ],
+                        secondary_text: 'Bolwarra, Victoria, Australia'
+                    },
+                    terms: [
+                        {
+                            offset: 0,
+                            value: '126'
+                        },
+                        {
+                            offset: 4,
+                            value: 'Princes Highway'
+                        },
+                        {
+                            offset: 21,
+                            value: 'Bolwarra'
+                        },
+                        {
+                            offset: 31,
+                            value: 'Victoria'
+                        },
+                        {
+                            offset: 41,
+                            value: 'Australia'
+                        }
+                    ],
+                    types: ['street_address', 'geocode']
+                }
+            ]);
+        } else {
+            this.service.getPlacePredictions({
+                input: input,
+                componentRestrictions: {country: 'au'},
+                types: ['address']
+            }, (predictions, status) => {
 
-            if (status === google.maps.places.PlacesServiceStatus.OK || status !== 'ZERO_RESULTS') {
-                onResult(predictions);
-            }
+                if (status === google.maps.places.PlacesServiceStatus.OK || status !== 'ZERO_RESULTS') {
+                    onResult(predictions);
+                }
 
-        });
+            });
+        }
 
     }
 
@@ -427,6 +478,7 @@ class AutocompleteGoogle {
                 };
 
                 if (inputValue) {
+
                     this._getResult(inputValue, result => {
 
                         this._cleanForm();
@@ -437,11 +489,14 @@ class AutocompleteGoogle {
 
                         });
 
+                        console.log(this.options.resultsUpdated);
+
                         if (typeof this.options.resultsUpdated === 'function') {
                             this.options.resultsUpdated(this.awesomplete.list);
                         }
 
                     });
+
                 }
 
             }
@@ -450,7 +505,7 @@ class AutocompleteGoogle {
 
         const chooseResult = e => {
 
-            this.placesService.getDetails({placeId: e.text.value}, (place, status) => {
+            const callback = (place, status) => {
 
                 if (status === 'OK') {
 
@@ -464,12 +519,85 @@ class AutocompleteGoogle {
                     throw new Error('Place service request returned error: ' + status);
                 }
 
-                //callback
+                    //callback
                 if (typeof this.options.placeSelected === 'function') {
                     this.options.placeSelected(this.result);
                 }
 
-            });
+            };
+
+            if (location.hostname === 'localhost') {
+                callback({
+                    address_components: [
+                        {
+                            long_name: '126',
+                            short_name: '126',
+                            types: ['street_number']
+                        },
+                        {
+                            long_name: 'Princes Highway',
+                            short_name: 'Princes Hwy',
+                            types: ['route']
+                        },
+                        {
+                            long_name: 'Bolwarra',
+                            short_name: 'Bolwarra',
+                            types: ['locality', 'political']
+                        },
+                        {
+                            long_name: 'Glenelg Shire',
+                            short_name: 'Glenelg',
+                            types: ['administrative_area_level_2', 'political']
+                        },
+                        {
+                            long_name: 'Victoria',
+                            short_name: 'VIC',
+                            types: ['administrative_area_level_1', 'political']
+                        },
+                        {
+                            long_name: 'Australia',
+                            short_name: 'AU',
+                            types: ['country', 'political']
+                        },
+                        {
+                            long_name: '3305',
+                            short_name: '3305',
+                            types: ['postal_code']
+                        }
+                    ],
+                    adr_address: '\u003cspan class="street-address"\u003e126 Princes Hwy\u003c/span\u003e, \u003cspan class="locality"\u003eBolwarra\u003c/span\u003e \u003cspan class="region"\u003eVIC\u003c/span\u003e \u003cspan class="postal-code"\u003e3305\u003c/span\u003e, \u003cspan class="country-name"\u003eAustralia\u003c/span\u003e',
+                    formatted_address: '126 Princes Hwy, Bolwarra VIC 3305, Australia',
+                    geometry: {
+                        location: {
+                            lat: -38.2911794,
+                            lng: 141.6087061
+                        },
+                        viewport: {
+                            northeast: {
+                                lat: -38.2908923,
+                                lng: 141.60889155
+                            },
+                            southwest: {
+                                lat: -38.2912751,
+                                lng: 141.60814975
+                            }
+                        }
+                    },
+                    icon: 'https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png',
+                    id: 'f3ba2d2b971163fc9f3de716d1232f9386d0cc3b',
+                    name: '126 Princes Hwy',
+                    place_id: 'ChIJ57-9r9-QnaoRZzzxfcRRHew',
+                    reference: 'CmRbAAAAljNnvRrFOL1qBBWcKq7No3_qQwimcTHrBQud9GPjDx5ycgQk31RrndZlUX7JUx5BNldG9COlCOxsFOUWGbYp6PuMthBfiUCH2hg3Uq1bj1wFlNeBuLwUzmNZKUrM4NDTEhDbDnkkWuHCfHt5m5hrNgI0GhQ1SisXvVIvWy-yszulPV9coo7unQ',
+                    scope: 'GOOGLE',
+                    types: ['street_address'],
+                    url: 'https://maps.google.com/?q=126+Princes+Hwy,+Bolwarra+VIC+3305,+Australia&ftid=0xaa9d90dfafbdbfe7:0xec1d51c47df13c67',
+                    utc_offset: 660,
+                    vicinity: 'Bolwarra'
+                }, 'OK');
+
+            } else {
+                this.placesService.getDetails({placeId: e.text.value}, callback);
+            }
 
         };
 
