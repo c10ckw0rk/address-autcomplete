@@ -310,7 +310,7 @@ class AutocompleteGoogle {
 
         const streetNumber = {
             true: `<div>
-                    <label class="autocomplete-label" for="autocomplete-google"></label>
+                    <label class="autocomplete-label" for="autocomplete-street-number"></label>
                     <div class="input-wrapper">
                         <span>
                         <input type="text" placeholder="Street Number" data-google-places-key="street_number" id="autocomplete-street-number" name="autocomplete-street-number"/></span>
