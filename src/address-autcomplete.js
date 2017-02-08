@@ -185,28 +185,28 @@ class AutocompleteGoogle {
 
     validate(element) {
 
-        this.isValid = true;
+        this.isValid = false;
 
-        const clsToggle = (ele, condition) => {
+        const renderView = (ele, condition) => {
 
             ele = this._utils().getAncestor(ele, '.input-wrapper');
 
             //add class to input field
             if (condition) {
-                ele.classList.remove('go');
-                ele.classList.add('stop');
-            } else {
+                ele.setAttribute('data-is-valid', true);
                 ele.classList.remove('stop');
                 ele.classList.add('go');
+            } else {
+                ele.setAttribute('data-is-valid', false);
+                ele.classList.remove('go');
+                ele.classList.add('stop');
             }
 
         };
 
-        const validator = (item) => {
+        const valCheck = val => {
 
-            const valid = !(this.result[item] === null || this.result[item] === '' || this.result[item] === 'null' || this.result[item] === undefined);
-            const input = document.querySelector(`[data-google-places-key="${item}"]`);
-            clsToggle(input, !valid);
+            const valid = !(val === null || val === '' || val === 'null' || val === undefined);
 
             return valid;
 
@@ -214,22 +214,40 @@ class AutocompleteGoogle {
 
         if (this.currentForm === 'autocomplete') {
 
-            this.isValid = this.placeChosen === null;
-            clsToggle(this.elements.autoCompleteInput, this.isValid);
-
-        } else if (element) {
-
-            const key = element.getAttribute('data-google-places-key');
-            validator(key);
+            this.isValid = this.placeChosen !== null;
+            renderView(this.elements.autoCompleteInput, this.isValid);
 
         } else if (this.currentForm === 'manual') {
 
+            const elementIsValid = (ele, item) => {
+
+                const valCheckResult = valCheck(this.result[item]);
+
+                console.log(valCheckResult);
+
+                if (ele.tagName === 'SELECT') {
+                    return ele.children[0].value !== ele.value && valCheckResult;
+                }
+
+                return valCheck(ele.value) && valCheckResult;
+
+            };
+
+            // Configure individual element
+            if (element) {
+                const googleKey = element.getAttribute('data-google-places-key');
+                const valid = elementIsValid(element, googleKey);
+                renderView(element, valid);
+            }
+
+            //Check the entire form for validity
             const isValid = Object.keys(this.result).map(item => {
-                return validator(item);
+                const ele = this.elements.manualForm.querySelector(`[data-google-places-key="${item}"]`);
+                return elementIsValid(ele, item);
             });
 
-            if (isValid.indexOf(false) !== -1) {
-                this.isValid = false;
+            if (isValid.indexOf(false) === -1) {
+                this.isValid = true;
             }
 
         }
@@ -341,7 +359,7 @@ class AutocompleteGoogle {
 
             if (this.options.suburbs) {
 
-                suburbInput = '<select data-google-places-key="locality" id="autocomplete-suburb" name="autocomplete-suburb">';
+                suburbInput = '<select data-google-places-key="locality" id="autocomplete-suburb" name="autocomplete-suburb" data-is-valid="false>';
 
                 this.options.suburbs.forEach(item => {
                     suburbInput += `<option value="${item.value}">${item.label}</option>`;
@@ -364,7 +382,7 @@ class AutocompleteGoogle {
                     <label class="autocomplete-label" for="autocomplete-street-number"></label>
                     <div class="input-wrapper">
                         <span>
-                        <input type="text" placeholder="Street Number" data-google-places-key="street_number" id="autocomplete-street-number" name="autocomplete-street-number"/></span>
+                        <input type="text" placeholder="Street Number" data-google-places-key="street_number" id="autocomplete-street-number" name="autocomplete-street-number" data-is-valid="false/></span>
                          <p class="label-text">Please enter a street number.</p>
                      </div>
                 </div>`,
@@ -373,9 +391,9 @@ class AutocompleteGoogle {
 
         const streetName = {
             true: `<div>
-                <label class="autocomplete-label" for="autocomplete_street-name"></label>
+                <label class="autocomplete-label" for="autocomplete-street-name"></label>
                 <div class="input-wrapper">
-                    <span><input type="text" placeholder="Street Name" data-google-places-key="route" id="autocomplete-street-name" name="autocomplete-street-name"/></span>
+                    <span><input type="text" placeholder="Street Name" data-google-places-key="route" id="autocomplete-street-name" name="autocomplete-street-name" data-is-valid="false"/></span>
                      <p class="label-text">Please enter a street name.</p>
                  </div>
             </div>`,
@@ -384,7 +402,7 @@ class AutocompleteGoogle {
 
         const suburb = {
             true: `<div>
-                <label class="autocomplete-label" for="autocomplete_suburb"></label>
+                <label class="autocomplete-label" for="autocomplete-suburb"></label>
                 <div class="input-wrapper">
                     <span>${getSuburbInput()}</span>
                     <p class="label-text">Please choose a suburb</p>
@@ -395,9 +413,9 @@ class AutocompleteGoogle {
 
         const state = {
             true: `<div>
-                <label class="autocomplete-label" for="autocomplete_state"></label>
+                <label class="autocomplete-label" for="autocomplete-state"></label>
                 <div class="input-wrapper">
-                    <span><select placeholder="State" data-google-places-key="administrative_area_level_1" id="autocomplete-state" name="autocomplete-state"/></span>
+                    <span><select placeholder="State" data-google-places-key="administrative_area_level_1" id="autocomplete-state" name="autocomplete-state" data-is-valid="false/></span>
                     <p class="label-text">Please choose a state</p>
                 </div>
             </div>`,
@@ -406,9 +424,9 @@ class AutocompleteGoogle {
 
         const postcode = {
             true: `<div>
-                    <label class="autocomplete-label" for="autocomplete_postcode"></label>
+                    <label class="autocomplete-label" for="autocomplete-postcode"></label>
                     <div class="input-wrapper">
-                        <span><input type="number" placeholder="Post code" data-google-places-key="postal_code" id="autocomplete-postcode" name="autocomplete-postcode"/></span>
+                        <span><input type="number" placeholder="Post code" data-google-places-key="postal_code" id="autocomplete-postcode" name="autocomplete-postcode" data-is-valid="false/></span>
                         <p class="label-text">Postcode</p>
                     </div>
                 </div>
@@ -421,9 +439,9 @@ class AutocompleteGoogle {
         const string = `
             <div class="autocomplete-wrapper" data-autocomplete-wrapper>
                 <div class="autocomplete-form" data-autocomplete-form>
-                    <label class="autocomplete-label" for="autocomplete_google"></label>
+                    <label class="autocomplete-label" for="autocomplete-google"></label>
                     <div class="input-wrapper">
-                        <span><input type="text" placeholder="Field name" data-autocomplete-input id="autocomplete-google" name="autocomplete-google"/></span>
+                        <span><input type="text" placeholder="Field name" data-autocomplete-input id="autocomplete-google" name="autocomplete-google" data-is-valid="false/></span>
                          <p class="label-text"></p>
                      </div>
                      <p><a href="#" data-form-toggle>Can't find address</a></p>
@@ -489,8 +507,6 @@ class AutocompleteGoogle {
 
                         });
 
-                        console.log(this.options.resultsUpdated);
-
                         if (typeof this.options.resultsUpdated === 'function') {
                             this.options.resultsUpdated(this.awesomplete.list);
                         }
@@ -519,7 +535,7 @@ class AutocompleteGoogle {
                     throw new Error('Place service request returned error: ' + status);
                 }
 
-                    //callback
+                //callback
                 if (typeof this.options.placeSelected === 'function') {
                     this.options.placeSelected(this.result);
                 }
@@ -608,6 +624,7 @@ class AutocompleteGoogle {
 
         const validate = e => {
             this.validate(e.target);
+            this.validate();
         };
 
         const emptyResult = () => {
@@ -620,6 +637,7 @@ class AutocompleteGoogle {
         this.elements.autoCompleteInput.addEventListener('focus', emptyResult);
 
         this._utils().delegate('[data-autocomplete-wrapper]', 'input, select', 'blur', validate);
+        this._utils().delegate('[data-autocomplete-wrapper]', 'select', 'change', validate);
         this._utils().delegate('[data-manual-form]', 'input, select', 'keyup', updateManualInput);
 
         document.addEventListener('awesomplete-selectcomplete', chooseResult);
