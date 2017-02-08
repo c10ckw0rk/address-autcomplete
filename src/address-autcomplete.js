@@ -528,6 +528,7 @@ class AutocompleteGoogle {
                     place.address_components.forEach(item => {
                         this.result[item.types[0]] = item.short_name;
                     });
+                    this.validate();
 
                 } else {
                     throw new Error('Place service request returned error: ' + status);
@@ -635,10 +636,17 @@ class AutocompleteGoogle {
         this.elements.autoCompleteInput.addEventListener('focus', emptyResult);
 
         this._utils().delegate('[data-autocomplete-wrapper]', 'input, select', 'blur', validate);
-        this._utils().delegate('[data-autocomplete-wrapper]', 'select', 'change', validate);
-        this._utils().delegate('[data-manual-form]', 'input, select', 'keyup', updateManualInput);
 
-        document.addEventListener('awesomplete-selectcomplete', chooseResult);
+        this._utils().delegate('[data-autocomplete-wrapper]', 'select', 'change', e => {
+            updateManualInput(e);
+            validate(e);
+        });
+
+        this._utils().delegate('[data-manual-form]', 'input', 'keyup', updateManualInput);
+
+        document.addEventListener('awesomplete-selectcomplete', e => {
+            chooseResult(e);
+        });
 
     }
 
