@@ -223,8 +223,6 @@ class AutocompleteGoogle {
 
                 const valCheckResult = valCheck(this.result[item]);
 
-                console.log(valCheckResult);
-
                 if (ele.tagName === 'SELECT') {
                     return ele.children[0].value !== ele.value && valCheckResult;
                 }
