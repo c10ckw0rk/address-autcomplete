@@ -359,7 +359,7 @@ class AutocompleteGoogle {
 
             if (this.options.suburbs) {
 
-                suburbInput = '<select data-google-places-key="locality" id="autocomplete-suburb" name="autocomplete-suburb" data-is-valid="false>';
+                suburbInput = '<select data-google-places-key="locality" id="autocomplete-suburb" name="autocomplete-suburb" data-is-valid="false">';
 
                 this.options.suburbs.forEach(item => {
                     suburbInput += `<option value="${item.value}">${item.label}</option>`;
@@ -369,7 +369,7 @@ class AutocompleteGoogle {
 
             } else {
 
-                suburbInput = '<input type="text" placeholder="Field name" data-google-places-key="locality" id="autocomplete-suburb" name="autocomplete-suburb"/></span>';
+                suburbInput = '<input type="text" placeholder="Field name" data-google-places-key="locality" id="autocomplete-suburb" name="autocomplete-suburb" data-is-valid="false"/></span>';
 
             }
 
@@ -382,7 +382,7 @@ class AutocompleteGoogle {
                     <label class="autocomplete-label" for="autocomplete-street-number"></label>
                     <div class="input-wrapper">
                         <span>
-                        <input type="text" placeholder="Street Number" data-google-places-key="street_number" id="autocomplete-street-number" name="autocomplete-street-number" data-is-valid="false/></span>
+                        <input type="text" placeholder="Street Number" data-google-places-key="street_number" id="autocomplete-street-number" name="autocomplete-street-number" data-is-valid="false"/></span>
                          <p class="label-text">Please enter a street number.</p>
                      </div>
                 </div>`,
@@ -415,7 +415,7 @@ class AutocompleteGoogle {
             true: `<div>
                 <label class="autocomplete-label" for="autocomplete-state"></label>
                 <div class="input-wrapper">
-                    <span><select placeholder="State" data-google-places-key="administrative_area_level_1" id="autocomplete-state" name="autocomplete-state" data-is-valid="false/></span>
+                    <span><select placeholder="State" data-google-places-key="administrative_area_level_1" id="autocomplete-state" name="autocomplete-state" data-is-valid="false"/></span>
                     <p class="label-text">Please choose a state</p>
                 </div>
             </div>`,
@@ -426,7 +426,7 @@ class AutocompleteGoogle {
             true: `<div>
                     <label class="autocomplete-label" for="autocomplete-postcode"></label>
                     <div class="input-wrapper">
-                        <span><input type="number" placeholder="Post code" data-google-places-key="postal_code" id="autocomplete-postcode" name="autocomplete-postcode" data-is-valid="false/></span>
+                        <span><input type="number" placeholder="Post code" data-google-places-key="postal_code" id="autocomplete-postcode" name="autocomplete-postcode" data-is-valid="false"/></span>
                         <p class="label-text">Postcode</p>
                     </div>
                 </div>
@@ -441,7 +441,7 @@ class AutocompleteGoogle {
                 <div class="autocomplete-form" data-autocomplete-form>
                     <label class="autocomplete-label" for="autocomplete-google"></label>
                     <div class="input-wrapper">
-                        <span><input type="text" placeholder="Field name" data-autocomplete-input id="autocomplete-google" name="autocomplete-google" data-is-valid="false/></span>
+                        <span><input type="text" placeholder="Field name" data-autocomplete-input id="autocomplete-google" name="autocomplete-google" data-is-valid="false"/></span>
                          <p class="label-text"></p>
                      </div>
                      <p><a href="#" data-form-toggle>Can't find address</a></p>
