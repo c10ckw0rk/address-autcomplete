@@ -158,7 +158,7 @@ describe('Google custom autocomplete dropdown', function () {
     });
 });
 
-},{"../src/address-autcomplete.js":4,"simulant":3}],2:[function(require,module,exports){
+},{"../src/address-autcomplete.js":5,"simulant":4}],2:[function(require,module,exports){
 /**
  * Simple, lightweight, usable local autocomplete library for modern browsers
  * Because there weren’t enough autocomplete scripts in the world? Because I’m completely insane and have NIH syndrome? Probably both. :P
@@ -604,6 +604,92 @@ return _;
 }());
 
 },{}],3:[function(require,module,exports){
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(factory);
+    } else if (typeof exports === 'object') {
+        module.exports = factory();
+    } else {
+        root.deepmerge = factory();
+    }
+}(this, function () {
+
+function isMergeableObject(val) {
+    var nonNullObject = val && typeof val === 'object'
+
+    return nonNullObject
+        && Object.prototype.toString.call(val) !== '[object RegExp]'
+        && Object.prototype.toString.call(val) !== '[object Date]'
+}
+
+function emptyTarget(val) {
+    return Array.isArray(val) ? [] : {}
+}
+
+function cloneIfNecessary(value, optionsArgument) {
+    var clone = optionsArgument && optionsArgument.clone === true
+    return (clone && isMergeableObject(value)) ? deepmerge(emptyTarget(value), value, optionsArgument) : value
+}
+
+function defaultArrayMerge(target, source, optionsArgument) {
+    var destination = target.slice()
+    source.forEach(function(e, i) {
+        if (typeof destination[i] === 'undefined') {
+            destination[i] = cloneIfNecessary(e, optionsArgument)
+        } else if (isMergeableObject(e)) {
+            destination[i] = deepmerge(target[i], e, optionsArgument)
+        } else if (target.indexOf(e) === -1) {
+            destination.push(cloneIfNecessary(e, optionsArgument))
+        }
+    })
+    return destination
+}
+
+function mergeObject(target, source, optionsArgument) {
+    var destination = {}
+    if (isMergeableObject(target)) {
+        Object.keys(target).forEach(function (key) {
+            destination[key] = cloneIfNecessary(target[key], optionsArgument)
+        })
+    }
+    Object.keys(source).forEach(function (key) {
+        if (!isMergeableObject(source[key]) || !target[key]) {
+            destination[key] = cloneIfNecessary(source[key], optionsArgument)
+        } else {
+            destination[key] = deepmerge(target[key], source[key], optionsArgument)
+        }
+    })
+    return destination
+}
+
+function deepmerge(target, source, optionsArgument) {
+    var array = Array.isArray(source);
+    var options = optionsArgument || { arrayMerge: defaultArrayMerge }
+    var arrayMerge = options.arrayMerge || defaultArrayMerge
+
+    if (array) {
+        return Array.isArray(target) ? arrayMerge(target, source, optionsArgument) : cloneIfNecessary(source, optionsArgument)
+    } else {
+        return mergeObject(target, source, optionsArgument)
+    }
+}
+
+deepmerge.all = function deepmergeAll(array, optionsArgument) {
+    if (!Array.isArray(array) || array.length < 2) {
+        throw new Error('first argument should be an array with at least two elements')
+    }
+
+    // we are sure there are at least 2 values, so it is safe to have no initial value
+    return array.reduce(function(prev, next) {
+        return deepmerge(prev, next, optionsArgument)
+    })
+}
+
+return deepmerge
+
+}));
+
+},{}],4:[function(require,module,exports){
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
@@ -1007,7 +1093,7 @@ return _;
 
 }));
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1020,6 +1106,10 @@ var _awesomplete = require('awesomplete');
 
 var _awesomplete2 = _interopRequireDefault(_awesomplete);
 
+var _deepmerge = require('deepmerge');
+
+var _deepmerge2 = _interopRequireDefault(_deepmerge);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1031,14 +1121,6 @@ var AutocompleteGoogle = function () {
         _classCallCheck(this, AutocompleteGoogle);
 
         this.options = options;
-        this.content = options.content || {
-            streetNumber: {},
-            streetName: {},
-            suburb: {},
-            state: {},
-            postcode: {},
-            autocompleteGoogle: {}
-        };
         this.service = new google.maps.places.AutocompleteService();
         this.placesService = new google.maps.places.PlacesService(document.createElement('div'));
         this.elements = {};
@@ -1349,38 +1431,42 @@ var AutocompleteGoogle = function () {
             var _this4 = this;
 
             var content = {
-                formToggle: this.content.formToggle || "Can't find your address?",
+                formToggle: "Can't find your address?",
                 streetNumber: {
-                    error: this.content.streetNumber.error || 'Please enter a street number.',
-                    label: this.content.streetNumber.label || 'Street Number',
-                    placeholder: this.content.streetNumber.placeholder || 'Street Number'
+                    error: 'Please enter a street number.',
+                    label: 'Street Number',
+                    placeholder: 'Street Number'
                 },
                 streetName: {
-                    error: this.content.streetName.error || 'Please enter a street name.',
-                    label: this.content.streetName.label || 'Street Name',
-                    placeholder: this.content.streetName.placeholder || 'Street Name'
+                    error: 'Please enter a street name.',
+                    label: 'Street Name',
+                    placeholder: 'Street Name'
                 },
                 suburb: {
-                    error: this.content.suburb.error || 'Please choose a suburb.',
-                    label: this.content.suburb.label || 'Suburb',
-                    placeholder: this.content.suburb.placeholder || 'Suburb'
+                    error: 'Please choose a suburb.',
+                    label: 'Suburb',
+                    placeholder: 'Suburb'
                 },
                 state: {
-                    error: this.content.state.error || 'Please enter a state.',
-                    label: this.content.state.label || 'State',
-                    placeholder: this.content.state.placeholder || 'State'
+                    error: 'Please enter a state.',
+                    label: 'State',
+                    placeholder: 'State'
                 },
                 postcode: {
-                    error: this.content.postcode.error || 'Please enter a postcode.',
-                    label: this.content.postcode.label || 'Postcode',
-                    placeholder: this.content.postcode.placeholder || 'Postcode'
+                    error: 'Please enter a postcode.',
+                    label: 'Postcode',
+                    placeholder: 'Postcode'
                 },
                 autocompleteGoogle: {
-                    error: this.content.autocompleteGoogle.error || 'Please select an option from the dropdown.',
-                    label: this.content.autocompleteGoogle.label || 'Address',
-                    placeholder: this.content.autocompleteGoogle.placeholder || 'Address'
+                    error: 'Please select an option from the dropdown.',
+                    label: 'Address',
+                    placeholder: 'Address'
                 }
             };
+
+            if (this.options.content) {
+                content = (0, _deepmerge2.default)(content, this.options.content);
+            }
 
             var getSuburbInput = function getSuburbInput() {
 
@@ -1640,6 +1726,6 @@ var AutocompleteGoogle = function () {
 
 exports.default = AutocompleteGoogle;
 
-},{"awesomplete":2}]},{},[1])(1)
+},{"awesomplete":2,"deepmerge":3}]},{},[1])(1)
 });
 //# sourceMappingURL=address-autcomplete.test.js.map

@@ -1,20 +1,13 @@
 /* global google */
 
 import Awesomplete from 'awesomplete';
+import merge from 'deepmerge';
 
 class AutocompleteGoogle {
 
     constructor(options = {}) {
 
         this.options = options;
-        this.content = options.content || {
-            streetNumber: {},
-            streetName: {},
-            suburb: {},
-            state: {},
-            postcode: {},
-            autocompleteGoogle: {}
-        };
         this.service = new google.maps.places.AutocompleteService();
         this.placesService = new google.maps.places.PlacesService(document.createElement('div'));
         this.elements = {};
@@ -359,39 +352,43 @@ class AutocompleteGoogle {
 
     _generateElements() {
 
-        const content = {
-            formToggle: this.content.formToggle || "Can't find your address?",
+        let content = {
+            formToggle: "Can't find your address?",
             streetNumber: {
-                error: this.content.streetNumber.error || 'Please enter a street number.',
-                label: this.content.streetNumber.label || 'Street Number',
-                placeholder: this.content.streetNumber.placeholder || 'Street Number'
+                error: 'Please enter a street number.',
+                label: 'Street Number',
+                placeholder: 'Street Number'
             },
             streetName: {
-                error: this.content.streetName.error || 'Please enter a street name.',
-                label: this.content.streetName.label || 'Street Name',
-                placeholder: this.content.streetName.placeholder || 'Street Name'
+                error: 'Please enter a street name.',
+                label: 'Street Name',
+                placeholder: 'Street Name'
             },
             suburb: {
-                error: this.content.suburb.error || 'Please choose a suburb.',
-                label: this.content.suburb.label || 'Suburb',
-                placeholder: this.content.suburb.placeholder || 'Suburb'
+                error: 'Please choose a suburb.',
+                label: 'Suburb',
+                placeholder: 'Suburb'
             },
             state: {
-                error: this.content.state.error || 'Please enter a state.',
-                label: this.content.state.label || 'State',
-                placeholder: this.content.state.placeholder || 'State'
+                error: 'Please enter a state.',
+                label: 'State',
+                placeholder: 'State'
             },
             postcode: {
-                error: this.content.postcode.error || 'Please enter a postcode.',
-                label: this.content.postcode.label || 'Postcode',
-                placeholder: this.content.postcode.placeholder || 'Postcode'
+                error: 'Please enter a postcode.',
+                label: 'Postcode',
+                placeholder: 'Postcode'
             },
             autocompleteGoogle: {
-                error: this.content.autocompleteGoogle.error || 'Please select an option from the dropdown.',
-                label: this.content.autocompleteGoogle.label || 'Address',
-                placeholder: this.content.autocompleteGoogle.placeholder || 'Address'
+                error: 'Please select an option from the dropdown.',
+                label: 'Address',
+                placeholder: 'Address'
             }
         };
+
+        if (this.options.content) {
+            content = merge(content, this.options.content);
+        }
 
         const getSuburbInput = () => {
 
