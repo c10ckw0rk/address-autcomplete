@@ -7,6 +7,14 @@ class AutocompleteGoogle {
     constructor(options = {}) {
 
         this.options = options;
+        this.content = options.content || {
+            streetNumber: {},
+            streetName: {},
+            suburb: {},
+            state: {},
+            postcode: {},
+            autocompleteGoogle: {}
+        };
         this.service = new google.maps.places.AutocompleteService();
         this.placesService = new google.maps.places.PlacesService(document.createElement('div'));
         this.elements = {};
@@ -351,6 +359,40 @@ class AutocompleteGoogle {
 
     _generateElements() {
 
+        const content = {
+            formToggle: this.content.formToggle || "Can't find your address?",
+            streetNumber: {
+                error: this.content.streetNumber.error || 'Please enter a street number.',
+                label: this.content.streetNumber.label || 'Street Number',
+                placeholder: this.content.streetNumber.placeholder || 'Street Number'
+            },
+            streetName: {
+                error: this.content.streetName.error || 'Please enter a street name.',
+                label: this.content.streetName.label || 'Street Name',
+                placeholder: this.content.streetName.placeholder || 'Street Name'
+            },
+            suburb: {
+                error: this.content.suburb.error || 'Please choose a suburb.',
+                label: this.content.suburb.label || 'Suburb',
+                placeholder: this.content.suburb.placeholder || 'Suburb'
+            },
+            state: {
+                error: this.content.state.error || 'Please enter a state.',
+                label: this.content.state.label || 'State',
+                placeholder: this.content.state.placeholder || 'State'
+            },
+            postcode: {
+                error: this.content.postcode.error || 'Please enter a postcode.',
+                label: this.content.postcode.label || 'Postcode',
+                placeholder: this.content.postcode.placeholder || 'Postcode'
+            },
+            autocompleteGoogle: {
+                error: this.content.autocompleteGoogle.error || 'Please select an option from the dropdown.',
+                label: this.content.autocompleteGoogle.label || 'Address',
+                placeholder: this.content.autocompleteGoogle.placeholder || 'Address'
+            }
+        };
+
         const getSuburbInput = () => {
 
             let suburbInput;
@@ -367,7 +409,7 @@ class AutocompleteGoogle {
 
             } else {
 
-                suburbInput = '<input type="text" placeholder="Field name" data-google-places-key="locality" id="autocomplete-suburb" name="autocomplete-suburb" data-is-valid="false"/></span>';
+                suburbInput = `<input type="text" placeholder="${content.suburb.placeholder}" data-google-places-key="locality" id="autocomplete-suburb" name="autocomplete-suburb" data-is-valid="false"/></span>`;
 
             }
 
@@ -377,11 +419,11 @@ class AutocompleteGoogle {
 
         const streetNumber = {
             true: `<div>
-                    <label class="autocomplete-label" for="autocomplete-street-number"></label>
+                    <label class="autocomplete-label" for="autocomplete-street-number">${content.streetNumber.label}</label>
                     <div class="input-wrapper">
                         <span>
-                        <input type="text" placeholder="Street Number" data-google-places-key="street_number" id="autocomplete-street-number" name="autocomplete-street-number" data-is-valid="false"/></span>
-                         <p class="label-text">Please enter a street number.</p>
+                        <input type="text" placeholder="${content.streetNumber.placeholder}" data-google-places-key="street_number" id="autocomplete-street-number" name="autocomplete-street-number" data-is-valid="false"/></span>
+                         <p class="label-text">${content.streetNumber.error}</p>
                      </div>
                 </div>`,
             false: ''
@@ -389,10 +431,10 @@ class AutocompleteGoogle {
 
         const streetName = {
             true: `<div>
-                <label class="autocomplete-label" for="autocomplete-street-name"></label>
+                <label class="autocomplete-label" for="autocomplete-street-name">${content.streetName.label}</label>
                 <div class="input-wrapper">
-                    <span><input type="text" placeholder="Street Name" data-google-places-key="route" id="autocomplete-street-name" name="autocomplete-street-name" data-is-valid="false"/></span>
-                     <p class="label-text">Please enter a street name.</p>
+                    <span><input type="text" placeholder="${content.streetName.placeholder}" data-google-places-key="route" id="autocomplete-street-name" name="autocomplete-street-name" data-is-valid="false"/></span>
+                     <p class="label-text">${content.streetName.error}</p>
                  </div>
             </div>`,
             false: ''
@@ -400,10 +442,10 @@ class AutocompleteGoogle {
 
         const suburb = {
             true: `<div>
-                <label class="autocomplete-label" for="autocomplete-suburb"></label>
+                <label class="autocomplete-label" for="autocomplete-suburb">${content.suburb.label}</label>
                 <div class="input-wrapper">
                     <span>${getSuburbInput()}</span>
-                    <p class="label-text">Please choose a suburb</p>
+                    <p class="label-text">${content.suburb.error}</p>
                 </div>
             </div>`,
             false: ''
@@ -411,10 +453,10 @@ class AutocompleteGoogle {
 
         const state = {
             true: `<div>
-                <label class="autocomplete-label" for="autocomplete-state"></label>
+                <label class="autocomplete-label" for="autocomplete-state">${content.state.label}</label>
                 <div class="input-wrapper">
-                    <span><select placeholder="State" data-google-places-key="administrative_area_level_1" id="autocomplete-state" name="autocomplete-state" data-is-valid="false"/></span>
-                    <p class="label-text">Please choose a state</p>
+                    <span><select placeholder="${content.state.placeholder}" data-google-places-key="administrative_area_level_1" id="autocomplete-state" name="autocomplete-state" data-is-valid="false"/></span>
+                    <p class="label-text">${content.state.error}</p>
                 </div>
             </div>`,
             false: ''
@@ -422,10 +464,10 @@ class AutocompleteGoogle {
 
         const postcode = {
             true: `<div>
-                    <label class="autocomplete-label" for="autocomplete-postcode"></label>
+                    <label class="autocomplete-label" for="autocomplete-postcode">${content.postcode.label}</label>
                     <div class="input-wrapper">
-                        <span><input type="number" placeholder="Post code" data-google-places-key="postal_code" id="autocomplete-postcode" name="autocomplete-postcode" data-is-valid="false"/></span>
-                        <p class="label-text">Postcode</p>
+                        <span><input type="number" placeholder="${content.postcode.placeholder}" data-google-places-key="postal_code" id="autocomplete-postcode" name="autocomplete-postcode" data-is-valid="false"/></span>
+                        <p class="label-text">${content.postcode.error}</p>
                     </div>
                 </div>
             </div>`,
@@ -437,12 +479,12 @@ class AutocompleteGoogle {
         const string = `
             <div class="autocomplete-wrapper" data-autocomplete-wrapper>
                 <div class="autocomplete-form" data-autocomplete-form>
-                    <label class="autocomplete-label" for="autocomplete-google"></label>
+                    <label class="autocomplete-label" for="autocomplete-google">${content.autocompleteGoogle.label}</label>
                     <div class="input-wrapper">
-                        <span><input type="text" placeholder="Field name" data-autocomplete-input id="autocomplete-google" name="autocomplete-google" data-is-valid="false"/></span>
-                         <p class="label-text"></p>
+                        <span><input type="text" placeholder="${content.autocompleteGoogle.placeholder}" data-autocomplete-input id="autocomplete-google" name="autocomplete-google" data-is-valid="false"/></span>
+                         <p class="label-text">${content.autocompleteGoogle.error}</p>
                      </div>
-                     <p><a href="#" data-form-toggle>Can't find address</a></p>
+                     <p><a href="#" data-form-toggle>${content.formToggle}</a></p>
                 </div>
                 <div class="manual-form" data-manual-form>
                     ${streetNumber[this.fields.streetNumber]}

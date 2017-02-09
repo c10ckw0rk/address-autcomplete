@@ -1031,6 +1031,14 @@ var AutocompleteGoogle = function () {
         _classCallCheck(this, AutocompleteGoogle);
 
         this.options = options;
+        this.content = options.content || {
+            streetNumber: {},
+            streetName: {},
+            suburb: {},
+            state: {},
+            postcode: {},
+            autocompleteGoogle: {}
+        };
         this.service = new google.maps.places.AutocompleteService();
         this.placesService = new google.maps.places.PlacesService(document.createElement('div'));
         this.elements = {};
@@ -1340,6 +1348,40 @@ var AutocompleteGoogle = function () {
         value: function _generateElements() {
             var _this4 = this;
 
+            var content = {
+                formToggle: this.content.formToggle || "Can't find your address?",
+                streetNumber: {
+                    error: this.content.streetNumber.error || 'Please enter a street number.',
+                    label: this.content.streetNumber.label || 'Street Number',
+                    placeholder: this.content.streetNumber.placeholder || 'Street Number'
+                },
+                streetName: {
+                    error: this.content.streetName.error || 'Please enter a street name.',
+                    label: this.content.streetName.label || 'Street Name',
+                    placeholder: this.content.streetName.placeholder || 'Street Name'
+                },
+                suburb: {
+                    error: this.content.suburb.error || 'Please choose a suburb.',
+                    label: this.content.suburb.label || 'Suburb',
+                    placeholder: this.content.suburb.placeholder || 'Suburb'
+                },
+                state: {
+                    error: this.content.state.error || 'Please enter a state.',
+                    label: this.content.state.label || 'State',
+                    placeholder: this.content.state.placeholder || 'State'
+                },
+                postcode: {
+                    error: this.content.postcode.error || 'Please enter a postcode.',
+                    label: this.content.postcode.label || 'Postcode',
+                    placeholder: this.content.postcode.placeholder || 'Postcode'
+                },
+                autocompleteGoogle: {
+                    error: this.content.autocompleteGoogle.error || 'Please select an option from the dropdown.',
+                    label: this.content.autocompleteGoogle.label || 'Address',
+                    placeholder: this.content.autocompleteGoogle.placeholder || 'Address'
+                }
+            };
+
             var getSuburbInput = function getSuburbInput() {
 
                 var suburbInput = void 0;
@@ -1355,40 +1397,40 @@ var AutocompleteGoogle = function () {
                     suburbInput += '</select>';
                 } else {
 
-                    suburbInput = '<input type="text" placeholder="Field name" data-google-places-key="locality" id="autocomplete-suburb" name="autocomplete-suburb" data-is-valid="false"/></span>';
+                    suburbInput = '<input type="text" placeholder="' + content.suburb.placeholder + '" data-google-places-key="locality" id="autocomplete-suburb" name="autocomplete-suburb" data-is-valid="false"/></span>';
                 }
 
                 return suburbInput;
             };
 
             var streetNumber = {
-                true: '<div>\n                    <label class="autocomplete-label" for="autocomplete-street-number"></label>\n                    <div class="input-wrapper">\n                        <span>\n                        <input type="text" placeholder="Street Number" data-google-places-key="street_number" id="autocomplete-street-number" name="autocomplete-street-number" data-is-valid="false"/></span>\n                         <p class="label-text">Please enter a street number.</p>\n                     </div>\n                </div>',
+                true: '<div>\n                    <label class="autocomplete-label" for="autocomplete-street-number">' + content.streetNumber.label + '</label>\n                    <div class="input-wrapper">\n                        <span>\n                        <input type="text" placeholder="' + content.streetNumber.placeholder + '" data-google-places-key="street_number" id="autocomplete-street-number" name="autocomplete-street-number" data-is-valid="false"/></span>\n                         <p class="label-text">' + content.streetNumber.error + '</p>\n                     </div>\n                </div>',
                 false: ''
             };
 
             var streetName = {
-                true: '<div>\n                <label class="autocomplete-label" for="autocomplete-street-name"></label>\n                <div class="input-wrapper">\n                    <span><input type="text" placeholder="Street Name" data-google-places-key="route" id="autocomplete-street-name" name="autocomplete-street-name" data-is-valid="false"/></span>\n                     <p class="label-text">Please enter a street name.</p>\n                 </div>\n            </div>',
+                true: '<div>\n                <label class="autocomplete-label" for="autocomplete-street-name">' + content.streetName.label + '</label>\n                <div class="input-wrapper">\n                    <span><input type="text" placeholder="' + content.streetName.placeholder + '" data-google-places-key="route" id="autocomplete-street-name" name="autocomplete-street-name" data-is-valid="false"/></span>\n                     <p class="label-text">' + content.streetName.error + '</p>\n                 </div>\n            </div>',
                 false: ''
             };
 
             var suburb = {
-                true: '<div>\n                <label class="autocomplete-label" for="autocomplete-suburb"></label>\n                <div class="input-wrapper">\n                    <span>' + getSuburbInput() + '</span>\n                    <p class="label-text">Please choose a suburb</p>\n                </div>\n            </div>',
+                true: '<div>\n                <label class="autocomplete-label" for="autocomplete-suburb">' + content.suburb.label + '</label>\n                <div class="input-wrapper">\n                    <span>' + getSuburbInput() + '</span>\n                    <p class="label-text">' + content.suburb.error + '</p>\n                </div>\n            </div>',
                 false: ''
             };
 
             var state = {
-                true: '<div>\n                <label class="autocomplete-label" for="autocomplete-state"></label>\n                <div class="input-wrapper">\n                    <span><select placeholder="State" data-google-places-key="administrative_area_level_1" id="autocomplete-state" name="autocomplete-state" data-is-valid="false"/></span>\n                    <p class="label-text">Please choose a state</p>\n                </div>\n            </div>',
+                true: '<div>\n                <label class="autocomplete-label" for="autocomplete-state">' + content.state.label + '</label>\n                <div class="input-wrapper">\n                    <span><select placeholder="' + content.state.placeholder + '" data-google-places-key="administrative_area_level_1" id="autocomplete-state" name="autocomplete-state" data-is-valid="false"/></span>\n                    <p class="label-text">' + content.state.error + '</p>\n                </div>\n            </div>',
                 false: ''
             };
 
             var postcode = {
-                true: '<div>\n                    <label class="autocomplete-label" for="autocomplete-postcode"></label>\n                    <div class="input-wrapper">\n                        <span><input type="number" placeholder="Post code" data-google-places-key="postal_code" id="autocomplete-postcode" name="autocomplete-postcode" data-is-valid="false"/></span>\n                        <p class="label-text">Postcode</p>\n                    </div>\n                </div>\n            </div>',
+                true: '<div>\n                    <label class="autocomplete-label" for="autocomplete-postcode">' + content.postcode.label + '</label>\n                    <div class="input-wrapper">\n                        <span><input type="number" placeholder="' + content.postcode.placeholder + '" data-google-places-key="postal_code" id="autocomplete-postcode" name="autocomplete-postcode" data-is-valid="false"/></span>\n                        <p class="label-text">' + content.postcode.error + '</p>\n                    </div>\n                </div>\n            </div>',
                 false: ''
             };
 
             var parser = new DOMParser();
 
-            var string = '\n            <div class="autocomplete-wrapper" data-autocomplete-wrapper>\n                <div class="autocomplete-form" data-autocomplete-form>\n                    <label class="autocomplete-label" for="autocomplete-google"></label>\n                    <div class="input-wrapper">\n                        <span><input type="text" placeholder="Field name" data-autocomplete-input id="autocomplete-google" name="autocomplete-google" data-is-valid="false"/></span>\n                         <p class="label-text"></p>\n                     </div>\n                     <p><a href="#" data-form-toggle>Can\'t find address</a></p>\n                </div>\n                <div class="manual-form" data-manual-form>\n                    ' + streetNumber[this.fields.streetNumber] + '\n                    ' + streetName[this.fields.streetName] + '\n                    ' + suburb[this.fields.suburb] + '\n                    ' + state[this.fields.state] + '\n                    ' + postcode[this.fields.postcode] + '\n                </div>\n            </div>';
+            var string = '\n            <div class="autocomplete-wrapper" data-autocomplete-wrapper>\n                <div class="autocomplete-form" data-autocomplete-form>\n                    <label class="autocomplete-label" for="autocomplete-google">' + content.autocompleteGoogle.label + '</label>\n                    <div class="input-wrapper">\n                        <span><input type="text" placeholder="' + content.autocompleteGoogle.placeholder + '" data-autocomplete-input id="autocomplete-google" name="autocomplete-google" data-is-valid="false"/></span>\n                         <p class="label-text">' + content.autocompleteGoogle.error + '</p>\n                     </div>\n                     <p><a href="#" data-form-toggle>' + content.formToggle + '</a></p>\n                </div>\n                <div class="manual-form" data-manual-form>\n                    ' + streetNumber[this.fields.streetNumber] + '\n                    ' + streetName[this.fields.streetName] + '\n                    ' + suburb[this.fields.suburb] + '\n                    ' + state[this.fields.state] + '\n                    ' + postcode[this.fields.postcode] + '\n                </div>\n            </div>';
 
             return parser.parseFromString(string, 'text/html').querySelector('.autocomplete-wrapper');
         }
@@ -1461,6 +1503,7 @@ var AutocompleteGoogle = function () {
                         place.address_components.forEach(function (item) {
                             _this5.result[item.types[0]] = item.short_name;
                         });
+                        _this5.validate();
                     } else {
                         throw new Error('Place service request returned error: ' + status);
                     }
@@ -1534,8 +1577,6 @@ var AutocompleteGoogle = function () {
                 } else {
                     _this5.placesService.getDetails({ placeId: e.text.value }, callback);
                 }
-
-                _this5.validate();
             };
 
             var updateManualInput = function updateManualInput(e) {
@@ -1566,7 +1607,9 @@ var AutocompleteGoogle = function () {
 
             this._utils().delegate('[data-manual-form]', 'input', 'keyup', updateManualInput);
 
-            document.addEventListener('awesomplete-selectcomplete', chooseResult);
+            document.addEventListener('awesomplete-selectcomplete', function (e) {
+                chooseResult(e);
+            });
         }
     }, {
         key: 'currentForm',
