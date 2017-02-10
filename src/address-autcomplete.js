@@ -251,6 +251,8 @@ class AutocompleteGoogle {
 
         }
 
+        if (this.options.customValidation) this.isValid = this.options.customValidation();
+
         return this.isValid;
 
     }

@@ -61,6 +61,13 @@ window.AC = new Autocomplete.default({
     fields: {
         state: false,
         postcode: false
+    },
+    customValidation() {
+        const input = document.querySelector('.input-wrapper');
+        input.classList.remove('go');
+        input.classList.add('stop');
+        input.querySelector('.label-text').innerHTML = "The address you entered is outside this restaurant's delivery zone. Check that you have entered the correct address and try again";
+        return false
     }
 });
 </script>

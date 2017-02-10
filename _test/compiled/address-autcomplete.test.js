@@ -1339,6 +1339,8 @@ var AutocompleteGoogle = function () {
                 })();
             }
 
+            if (this.options.customValidation) this.isValid = this.options.customValidation();
+
             return this.isValid;
         }
     }, {
