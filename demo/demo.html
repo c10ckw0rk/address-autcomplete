@@ -3,10 +3,7 @@
 
 <head>
     <title>Autocomplete Js Google</title>
-    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCZu84Vw86bpXAXMgD8bBNfJB5IgQOo90k&libraries=places"></script>
-    <script>
-    //# sourceMappingURL=simulant.umd.js.map
-    </script>
+    <script src="http://maps.googleapis.com/maps/api/js?key={you google key}&libraries=places"></script>
     <script src="/scripts/address-autcomplete.js"></script>
     <link rel="stylesheet" type="text/css" href="basic.css">
 </head>
@@ -15,61 +12,56 @@
 
 </body>
 
+</html>
+
 <script>
-window.AC = new Autocomplete.default({
-    parent: 'body',
-    // formShow: 'manual',
-    content: {
-        autocompleteGoogle: {
-            placeholder: 'Please enter your delivery Address'
+    window.AC = new Autocomplete.default({
+        parent: 'body',
+        // formShow: 'manual',
+        content: {
+            autocompleteGoogle: {
+                placeholder: 'Please enter your delivery Address'
+            }
+        },
+        suburbs: [{
+            "value": "464",
+            "label": "Darling Harbour"
+        }, {
+            "value": "465",
+            "label": "Dawes Point"
+        }, {
+            "value": "466",
+            "label": "Haymarket"
+        }, {
+            "value": "467",
+            "label": "Millers Point"
+        }, {
+            "value": "468",
+            "label": "Parliament House"
+        }, {
+            "value": "469",
+            "label": "Sydney"
+        }, {
+            "value": "470",
+            "label": "Sydney South"
+        }, {
+            "value": "471",
+            "label": "The Rocks"
+        }, {
+            "value": "16572",
+            "label": "Circular Quay"
+        }, {
+            "value": "16574",
+            "label": "Walsh Bay"
+        }, {
+            "value": "35936",
+            "label": "Barangaroo"
+        }],
+        fields: {
+            state: false,
+            postcode: false
         }
-    },
-    suburbs: [{
-        "value": "464",
-        "label": "Darling Harbour"
-    }, {
-        "value": "465",
-        "label": "Dawes Point"
-    }, {
-        "value": "466",
-        "label": "Haymarket"
-    }, {
-        "value": "467",
-        "label": "Millers Point"
-    }, {
-        "value": "468",
-        "label": "Parliament House"
-    }, {
-        "value": "469",
-        "label": "Sydney"
-    }, {
-        "value": "470",
-        "label": "Sydney South"
-    }, {
-        "value": "471",
-        "label": "The Rocks"
-    }, {
-        "value": "16572",
-        "label": "Circular Quay"
-    }, {
-        "value": "16574",
-        "label": "Walsh Bay"
-    }, {
-        "value": "35936",
-        "label": "Barangaroo"
-    }],
-    fields: {
-        state: false,
-        postcode: false
-    },
-    customValidation() {
-        const input = document.querySelector('.input-wrapper');
-        input.classList.remove('go');
-        input.classList.add('stop');
-        input.querySelector('.label-text').innerHTML = "The address you entered is outside this restaurant's delivery zone. Check that you have entered the correct address and try again";
-        return false
-    }
-});
+    });
 </script>
 
 </html>
