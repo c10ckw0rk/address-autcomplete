@@ -23,7 +23,7 @@
         "karma-verbose-reporter": "0.0.5",
         "phantomjs-prebuilt": "2.1.14",
         "pump": "1.0.2",
-        "rimraf": "2.5.4",
+        "rimraf": "^2.6.0",
         "simulant": "0.2.2",
         "vinyl-buffer": "1.0.0",
         "vinyl-source-stream": "1.1.0",

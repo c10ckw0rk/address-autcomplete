@@ -66,9 +66,9 @@ class AutocompleteGoogle {
         return {
 
             /**
-            * Remove all special characters and spaces from a string
-            * @param {string} string - The string to clean
-            */
+             * Remove all special characters and spaces from a string
+             * @param {string} string - The string to clean
+             */
 
             cleanString(string) {
                 string = string.toLowerCase();
@@ -76,9 +76,9 @@ class AutocompleteGoogle {
             },
 
             /**
-            * Removes an element and returns it
-            * @param {element} element - The element to remove
-            */
+             * Removes an element and returns it
+             * @param {element} element - The element to remove
+             */
 
             removeElement(element) {
                 element.parentNode.removeChild(element);
@@ -86,9 +86,9 @@ class AutocompleteGoogle {
             },
 
             /**
-            * Converts array like item to an array
-            * @param {object} obj - The object to convert
-            */
+             * Converts array like item to an array
+             * @param {object} obj - The object to convert
+             */
 
             toArray(obj) {
 
@@ -102,12 +102,12 @@ class AutocompleteGoogle {
             },
 
             /**
-            * Delegates an event to a child element
-            * @param {string} parent - A css selector of the parent element
-            * @param {string} target - A css selector of the target element
-            * @param {string} type - The type of event
-            * @param {function} code - The function to execute if a target is clicked
-            */
+             * Delegates an event to a child element
+             * @param {string} parent - A css selector of the parent element
+             * @param {string} target - A css selector of the target element
+             * @param {string} type - The type of event
+             * @param {function} code - The function to execute if a target is clicked
+             */
 
             delegate(parent, target, type, code) {
 
@@ -124,10 +124,10 @@ class AutocompleteGoogle {
             },
 
             /**
-            * Delegates an event to a child element
-            * @param {element} element - The element whose ancestor you want.
-            * @param {string} ancestor - A css selector of the ancestor element you want to target
-            */
+             * Delegates an event to a child element
+             * @param {element} element - The element whose ancestor you want.
+             * @param {string} ancestor - A css selector of the ancestor element you want to target
+             */
 
             getAncestor(element, ancestor) {
 
@@ -251,8 +251,6 @@ class AutocompleteGoogle {
 
         }
 
-        if (this.options.customValidation) this.isValid = this.options.customValidation();
-
         return this.isValid;
 
     }
@@ -289,57 +287,47 @@ class AutocompleteGoogle {
     _getResult(input, onResult) {
 
         if (location.hostname === 'localhost') {
-            onResult([
-                {
-                    description: '126 Princes Highway, Bolwarra, Victoria, Australia',
-                    id: 'f3ba2d2b971163fc9f3de716d1232f9386d0cc3b',
-                    matched_substrings: [
-                        {
-                            length: 2,
-                            offset: 0
-                        }
-                    ],
-                    place_id: 'ChIJ57-9r9-QnaoRZzzxfcRRHew',
-                    reference: 'ClRKAAAAwIG0qank1q8kRkxGydb4RcCQD6MchOWjOamYLRvNmiQnzFmFMntn_K4iC-hsKmHwl46GcFbs4Ck6Tz8Isd9VDg0TvX7Kxf9B1NTPvR2RwiISEEElzX-M03xToF38WrGve2YaFMXoC_U3_maC12ElKtzTSD_TqbA8',
-                    structured_formatting: {
-                        main_text: '126 Princes Highway',
-                        main_text_matched_substrings: [
-                            {
-                                length: 2,
-                                offset: 0
-                            }
-                        ],
-                        secondary_text: 'Bolwarra, Victoria, Australia'
-                    },
-                    terms: [
-                        {
-                            offset: 0,
-                            value: '126'
-                        },
-                        {
-                            offset: 4,
-                            value: 'Princes Highway'
-                        },
-                        {
-                            offset: 21,
-                            value: 'Bolwarra'
-                        },
-                        {
-                            offset: 31,
-                            value: 'Victoria'
-                        },
-                        {
-                            offset: 41,
-                            value: 'Australia'
-                        }
-                    ],
-                    types: ['street_address', 'geocode']
-                }
-            ]);
+            onResult([{
+                description: '126 Princes Highway, Bolwarra, Victoria, Australia',
+                id: 'f3ba2d2b971163fc9f3de716d1232f9386d0cc3b',
+                matched_substrings: [{
+                    length: 2,
+                    offset: 0
+                }],
+                place_id: 'ChIJ57-9r9-QnaoRZzzxfcRRHew',
+                reference: 'ClRKAAAAwIG0qank1q8kRkxGydb4RcCQD6MchOWjOamYLRvNmiQnzFmFMntn_K4iC-hsKmHwl46GcFbs4Ck6Tz8Isd9VDg0TvX7Kxf9B1NTPvR2RwiISEEElzX-M03xToF38WrGve2YaFMXoC_U3_maC12ElKtzTSD_TqbA8',
+                structured_formatting: {
+                    main_text: '126 Princes Highway',
+                    main_text_matched_substrings: [{
+                        length: 2,
+                        offset: 0
+                    }],
+                    secondary_text: 'Bolwarra, Victoria, Australia'
+                },
+                terms: [{
+                    offset: 0,
+                    value: '126'
+                }, {
+                    offset: 4,
+                    value: 'Princes Highway'
+                }, {
+                    offset: 21,
+                    value: 'Bolwarra'
+                }, {
+                    offset: 31,
+                    value: 'Victoria'
+                }, {
+                    offset: 41,
+                    value: 'Australia'
+                }],
+                types: ['street_address', 'geocode']
+            }]);
         } else {
             this.service.getPlacePredictions({
                 input: input,
-                componentRestrictions: {country: 'au'},
+                componentRestrictions: {
+                    country: 'au'
+                },
                 types: ['address']
             }, (predictions, status) => {
 
@@ -542,7 +530,10 @@ class AutocompleteGoogle {
                         this.awesomplete.list = result.map(item => {
 
                             const formattedResult = splitAt(item.description.indexOf(','), item.description);
-                            return {value: item.place_id, label: formattedResult[0] + '<br>' + formattedResult[1]};
+                            return {
+                                value: item.place_id,
+                                label: formattedResult[0] + '<br>' + formattedResult[1]
+                            };
 
                         });
 
@@ -584,43 +575,35 @@ class AutocompleteGoogle {
 
             if (location.hostname === 'localhost') {
                 callback({
-                    address_components: [
-                        {
-                            long_name: '126',
-                            short_name: '126',
-                            types: ['street_number']
-                        },
-                        {
-                            long_name: 'Princes Highway',
-                            short_name: 'Princes Hwy',
-                            types: ['route']
-                        },
-                        {
-                            long_name: 'Bolwarra',
-                            short_name: 'Bolwarra',
-                            types: ['locality', 'political']
-                        },
-                        {
-                            long_name: 'Glenelg Shire',
-                            short_name: 'Glenelg',
-                            types: ['administrative_area_level_2', 'political']
-                        },
-                        {
-                            long_name: 'Victoria',
-                            short_name: 'VIC',
-                            types: ['administrative_area_level_1', 'political']
-                        },
-                        {
-                            long_name: 'Australia',
-                            short_name: 'AU',
-                            types: ['country', 'political']
-                        },
-                        {
-                            long_name: '3305',
-                            short_name: '3305',
-                            types: ['postal_code']
-                        }
-                    ],
+                    address_components: [{
+                        long_name: '126',
+                        short_name: '126',
+                        types: ['street_number']
+                    }, {
+                        long_name: 'Princes Highway',
+                        short_name: 'Princes Hwy',
+                        types: ['route']
+                    }, {
+                        long_name: 'Bolwarra',
+                        short_name: 'Bolwarra',
+                        types: ['locality', 'political']
+                    }, {
+                        long_name: 'Glenelg Shire',
+                        short_name: 'Glenelg',
+                        types: ['administrative_area_level_2', 'political']
+                    }, {
+                        long_name: 'Victoria',
+                        short_name: 'VIC',
+                        types: ['administrative_area_level_1', 'political']
+                    }, {
+                        long_name: 'Australia',
+                        short_name: 'AU',
+                        types: ['country', 'political']
+                    }, {
+                        long_name: '3305',
+                        short_name: '3305',
+                        types: ['postal_code']
+                    }],
                     adr_address: '\u003cspan class="street-address"\u003e126 Princes Hwy\u003c/span\u003e, \u003cspan class="locality"\u003eBolwarra\u003c/span\u003e \u003cspan class="region"\u003eVIC\u003c/span\u003e \u003cspan class="postal-code"\u003e3305\u003c/span\u003e, \u003cspan class="country-name"\u003eAustralia\u003c/span\u003e',
                     formatted_address: '126 Princes Hwy, Bolwarra VIC 3305, Australia',
                     geometry: {
@@ -652,7 +635,9 @@ class AutocompleteGoogle {
                 }, 'OK');
 
             } else {
-                this.placesService.getDetails({placeId: e.text.value}, callback);
+                this.placesService.getDetails({
+                    placeId: e.text.value
+                }, callback);
             }
 
         };
